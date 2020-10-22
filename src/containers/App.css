@@ -1,0 +1,12 @@
+@font-face {
+font-family: 'Transformers Regular';
+font-style: normal;
+font-weight: normal;
+src: local('Transformers Regular'), url('TransformersMovie-y9Ad.woff') format('woff');
+}
+
+h1 {
+ font-family: 'Transformers Regular';
+ font-weight: 200;
+ color: #00dcdc;
+}
