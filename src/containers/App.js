@@ -1,50 +1,45 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import '../containers/App.css';
 import Scroll from '../components/Scroll';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-class App extends Component {
-	constructor() {
-		super()
-		this.state = {
-			robots: [],
-			searchfield: ''
-		}
-	}
+function App (props) {
+	const [robots, setRobots] = useState([]);
+	const [searchfield, setSearchfield] = useState('');
 
-	componentDidMount() {
+	useEffect( () => {
 		fetch('https://jsonplaceholder.typicode.com/users')
 			.then(response => response.json())
-			.then(users => this.setState({ robots: users }));
+			.then(users => setRobots(users))
+	},[])
+
+	function onSearchChange (event) {
+		setSearchfield(event.target.value)
 	}
 
-	onSearchChange = (event) => {
-		this.setState({searchfield: event.target.value})
-	}
+	
+	const filteredRobots = robots.filter(robot => {
+		return robot.name.toLowerCase().includes(searchfield.toLowerCase())
+	});
 
-	render() {
-		const filteredRobots = this.state.robots.filter(robot => {
-			return robot.name.toLowerCase().includes(this.state.searchfield.toLowerCase())
-		});
-
-		if (this.state.robots.length === 0) {
-			return <h1>Loading...</h1>
-		} else {
-			return (
+	if (robots.length === 0) {
+		return <h1>Loading...</h1>
+	} else {
+		return (
 			<div className='tc'>
 				<h1 className='f1 f-headline-ns tc db mb3 mb4-ns'>RoboFriends</h1>
-				<SearchBox searchChange={this.onSearchChange} />
+				<SearchBox searchChange={onSearchChange} />
 				<Scroll>
 					<ErrorBoundary>
 						<CardList robots={filteredRobots} />
 					</ErrorBoundary>
 				</Scroll>
 			</div>
-			);
-		}
+		);
 	}
+	
 }
 
 export default App;
